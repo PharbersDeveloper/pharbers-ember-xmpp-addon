@@ -1,6 +1,11 @@
 <div class="">
     <p>
+        {{textarea rows=20 cols=80 value=content}}
+        to: {{input value=to}}
         <button type="button" name="button" {{action 'send'}}>发送消息</button>
     </p>
+    <div class="">
+        {{message}}
+    </div>
 </div>
 {{outlet}}
