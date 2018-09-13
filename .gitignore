@@ -4,6 +4,9 @@
 /dist/
 /tmp/
 
+# VSCode
+.vscode/
+
 # dependencies
 /bower_components/
 /node_modules/
