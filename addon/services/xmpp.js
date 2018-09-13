@@ -8,7 +8,7 @@ export default Service.extend({
         return this.get('connection');
     }),
     getText(body) {
-        return Strophe.getText(body);
+        return Strophe.xmlunescape(Strophe.getText(body));
     },
     connect(userName, password, xmppConf, callback) {
         let that = this;
