@@ -1,9 +1,10 @@
 import Service from '@ember/service';
 import { computed } from '@ember/object';
+import { later } from '@ember/runloop';
 import { Strophe, $pres, $msg } from 'strophe.js';
+import xpo from '../-private/xmppObject';
 
 export default Service.extend({
-    connection: null,
     getConnection: computed('connection', function() {
         return this.get('connection');
     }),
@@ -41,10 +42,12 @@ export default Service.extend({
         //     console.info('SENT => ' + data)
         // }
 
-        if(this.get('getConnection') === null) {
+        if(this.get('getConnection') === undefined) {
+            
             const BOSH_SERVICE =
                 xmppConf.xmppHost + ':' + xmppConf.xmppPort + xmppConf.xmppBosh;
-
+            
+            
             this.set('connection',
                 new Strophe.Connection(BOSH_SERVICE, {'keepalive': true}));
 
@@ -55,8 +58,8 @@ export default Service.extend({
                 this.get('getConnection').
                     connect(userName + '@localhost', password, onConnect);
             }
-
             localStorage.setItem('xmppjid', userName + '@localhost')
+            
 
             // this.get('getConnection').rawInput = rawInput
             // this.get('getConnection').rawOutput = rawOutput
