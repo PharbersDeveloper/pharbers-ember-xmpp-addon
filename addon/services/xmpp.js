@@ -2,7 +2,6 @@ import Service from '@ember/service';
 import { computed } from '@ember/object';
 import { later } from '@ember/runloop';
 import { Strophe, $pres, $msg } from 'strophe.js';
-import xpo from '../-private/xmppObject';
 
 export default Service.extend({
     getConnection: computed('connection', function() {
