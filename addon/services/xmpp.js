@@ -17,10 +17,12 @@ export default Service.extend({
                 console.info('正在连接...');
             } else if (status == Strophe.Status.CONNFAIL) {
                 console.info('连接失败.');
+                reConnect();
             } else if (status == Strophe.Status.DISCONNECTING) {
                 console.info('正在关闭连接...');
             } else if (status == Strophe.Status.DISCONNECTED) {
                 console.info('连接关闭结束.');
+                reConnect();
             } else if (status == Strophe.Status.ATTACHED) {
                 console.info('重新连接.')
                 that.get('getConnection').
@@ -33,6 +35,12 @@ export default Service.extend({
                     send($pres().tree());
             }
         }
+        let reConnect = function() {
+            console.info('5秒后重新连接...');
+            later(that, function() {
+                exec()
+            }, 1000 * 5)
+        }
 
         // let rawInput = function(data) {
         //     console.info('RECV => ' + data)
@@ -40,29 +48,31 @@ export default Service.extend({
         // let rawOutput = function(data) {
         //     console.info('SENT => ' + data)
         // }
-
-        if(this.get('getConnection') === undefined) {
+        function exec() {
+            if(that.get('getConnection') === undefined || !that.get('getConnection').connected) {
             
-            const BOSH_SERVICE =
-                xmppConf.xmppHost + ':' + xmppConf.xmppPort + xmppConf.xmppBosh;
-            
-            
-            this.set('connection',
-                new Strophe.Connection(BOSH_SERVICE, {'keepalive': true}));
-
-            try {
-                this.get('getConnection').restore(userName + '@localhost', onConnect);
-            } catch(e) {
-                localStorage.removeItem('xmppjid');
-                this.get('getConnection').
-                    connect(userName + '@localhost', password, onConnect);
+                const BOSH_SERVICE =
+                    xmppConf.xmppHost + ':' + xmppConf.xmppPort + xmppConf.xmppBosh;
+                
+                
+                that.set('connection',
+                    new Strophe.Connection(BOSH_SERVICE, {'keepalive': true}));
+    
+                try {
+                    that.get('getConnection').restore(userName + '@localhost', onConnect);
+                } catch(e) {
+                    localStorage.removeItem('xmppjid');
+                    that.get('getConnection').
+                        connect(userName + '@localhost', password, onConnect);
+                }
+                localStorage.setItem('xmppjid', userName + '@localhost')
+                
+    
+                // that.get('getConnection').rawInput = rawInput
+                // that.get('getConnection').rawOutput = rawOutput
             }
-            localStorage.setItem('xmppjid', userName + '@localhost')
-            
-
-            // this.get('getConnection').rawInput = rawInput
-            // this.get('getConnection').rawOutput = rawOutput
         }
+        exec()
     },
     /**
      * 现在只支持文字发送
@@ -72,7 +82,6 @@ export default Service.extend({
      * @return {[type]}               [description]
      */
     send(to, conent, type = 'chat') {
-
         let msg = $msg({
 				to: to,
 				from: localStorage.getItem('xmppjid'),
