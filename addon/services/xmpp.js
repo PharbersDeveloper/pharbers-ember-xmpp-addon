@@ -42,34 +42,25 @@ export default Service.extend({
             }, 1000 * 5)
         }
 
-        // let rawInput = function(data) {
-        //     console.info('RECV => ' + data)
-        // }
-        // let rawOutput = function(data) {
-        //     console.info('SENT => ' + data)
-        // }
         function exec() {
             if(that.get('getConnection') === undefined || !that.get('getConnection').connected) {
             
-                const BOSH_SERVICE =
-                    xmppConf.xmppHost + ':' + xmppConf.xmppPort + xmppConf.xmppBosh;
+                const BOSH_SERVICE = xmppConf.xmppHost + ':' + xmppConf.xmppPort + xmppConf.xmppBosh;
                 
-                
-                that.set('connection',
-                    new Strophe.Connection(BOSH_SERVICE, {'keepalive': true}));
+                that.set('connection', new Strophe.Connection(BOSH_SERVICE, {'keepalive': true}));
     
                 try {
                     that.get('getConnection').restore(userName + '@localhost', onConnect);
                 } catch(e) {
                     localStorage.removeItem('xmppjid');
-                    that.get('getConnection').
-                        connect(userName + '@localhost', password, onConnect);
+                    that.get('getConnection').connect(userName + '@localhost', password, onConnect);
                 }
-                localStorage.setItem('xmppjid', userName + '@localhost')
-                
-    
-                // that.get('getConnection').rawInput = rawInput
-                // that.get('getConnection').rawOutput = rawOutput
+                localStorage.setItem('xmppjid', userName + '@localhost');
+            } else {
+                that.get('getConnection').flush();
+                that.get('getConnection').disconnect();
+                that.set('connection', undefined);
+                exec()
             }
         }
         exec()
