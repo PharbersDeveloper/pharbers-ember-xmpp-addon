@@ -36,19 +36,19 @@ export default Service.extend({
             }
         }
         let reConnect = function() {
-            console.info('5秒后重新连接...');
+            console.info('10秒后重新连接...');
             later(that, function() {
                 exec()
-            }, 1000 * 5)
+            }, 1000 * 10)
         }
 
         function exec() {
             if(that.get('getConnection') === undefined || !that.get('getConnection').connected) {
-            
+
                 const BOSH_SERVICE = xmppConf.xmppHost + ':' + xmppConf.xmppPort + xmppConf.xmppBosh;
-                
+
                 that.set('connection', new Strophe.Connection(BOSH_SERVICE, {'keepalive': true}));
-    
+
                 try {
                     that.get('getConnection').restore(userName + '@localhost', onConnect);
                 } catch(e) {
@@ -56,11 +56,6 @@ export default Service.extend({
                     that.get('getConnection').connect(userName + '@localhost', password, onConnect);
                 }
                 localStorage.setItem('xmppjid', userName + '@localhost');
-            } else {
-                that.get('getConnection').flush();
-                that.get('getConnection').disconnect();
-                that.set('connection', undefined);
-                exec()
             }
         }
         exec()
