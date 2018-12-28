@@ -1,11 +1,25 @@
-<div class="">
-    <p>
-        {{textarea rows=20 cols=80 value=content}}
-        to: {{input value=to}}
-        <button type="button" name="button" {{action 'send'}}>发送消息</button>
-    </p>
-    <div class="">
-        {{message}}
-    </div>
-</div>
+{{!-- <div class="">
+	<p>
+		{{textarea rows=20 cols=80 value=content}}
+		to: {{input value=to}}
+		<button type="button" name="button" {{action 'send'}}>发送消息</button>
+	</p>
+	<div class="">
+		{{message}}
+	</div>
+</div> --}}
+
+{{showText}}
+<br>
+<br>
+<button onclick={{action "application"}}>application</button>
+<br>
+<br>
+<button onclick={{action "test1"}}>Test1</button>
+<br>
+<br>
+<button onclick={{action "test2"}}>Test2</button>
+<br>
+<br>
+
 {{outlet}}
