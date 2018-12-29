@@ -42,11 +42,15 @@ export default Mixin.create({
 		MessageFactory.register(instance);
 
 		function onMessage(msg) {
+
 			let from = msg.getAttribute('from'),
 				type = msg.getAttribute('type'),
-				elems = msg.getElementsByTagName('body');
+				elems = msg.getElementsByTagName('body'),
+				receiveTime = new Date().getTime(); // 接收消息时间戳
+
 
 			if (type === 'chat' && elems.length > 0) {
+				window.console.info(receiveTime)
 				let body = elems[0];
 
 				window.console.info('ECHOBOT: I got a message from ' + from + ': ' + that.get('xmpp').getText(body));
